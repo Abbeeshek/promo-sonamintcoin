@@ -1,0 +1,122 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* Color Tokens */
+  --bg-onyx: #0A0B0E;
+  --bg-charcoal: #14161D;
+  --bg-elevated: #181A22;
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-gold-subtle: rgba(212, 175, 55, 0.2);
+  
+  --accent-gold: #D4AF37;
+  --accent-gold-bright: #F3D068;
+  --accent-gold-dark: #AA7C11;
+
+  --text-primary: #F9FAFB;
+  --text-secondary: #9CA3AF;
+  
+  /* Gold Gradient */
+  --gold-gradient: linear-gradient(135deg, #F3D068 0%, #D4AF37 50%, #AA7C11 100%);
+  --gold-text-gradient: linear-gradient(135deg, #FFF0BD 0%, #F3D068 40%, #D4AF37 80%);
+}
+
+/* Custom Utilities */
+@layer utilities {
+  .bg-gold-gradient {
+    background: var(--gold-gradient);
+  }
+  
+  .text-gold-gradient {
+    background: var(--gold-text-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  .glass-panel {
+    background: rgba(20, 22, 29, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .glass-card {
+    background: rgba(24, 26, 34, 0.6);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid var(--border-subtle);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .glass-card:hover {
+    border-color: var(--border-gold-subtle);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.12);
+  }
+}
+
+/* Subtle Hero Ambient Glow Animation */
+@keyframes ambientGlow {
+  0%, 100% {
+    opacity: 0.4;
+    transform: scale(1) translateY(0);
+  }
+  50% {
+    opacity: 0.7;
+    transform: scale(1.08) translateY(-10px);
+  }
+}
+
+@keyframes heroFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-ambient-glow {
+  animation: ambientGlow 8s ease-in-out infinite;
+}
+
+.animate-hero-fade {
+  animation: heroFadeIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* Accessibility Focus Ring */
+:focus-visible {
+  outline: 2px solid #D4AF37;
+  outline-offset: 2px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #0A0B0E;
+}
+::-webkit-scrollbar-thumb {
+  background: #1F232D;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #2D3342;
+}
+
+/* Reduced Motion Override */
+@media (prefers-reduced-motion: reduce) {
+  .animate-ambient-glow,
+  .animate-hero-fade {
+    animation: none !important;
+    transform: none !important;
+  }
+  * {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
