@@ -31,7 +31,7 @@ export const VideosPage: React.FC = () => {
       categoryKey: 'Stockpoint',
       description: 'Regional distribution hubs, stockpoint partner setup, and outlet operation videos.',
       icon: <Layers className="w-6 h-6 text-[#F3D068]" />,
-      coverImage: '/Posters/Sonamintcoin Plan/WhatsApp Image 2026-08-17 at 13.17.58.jpeg',
+      coverImage: '/Posters/stock point/WhatsApp Image 2026-09-02 at 22.50.21.jpeg',
     },
     {
       id: 'folder-digital-marketing',
@@ -39,7 +39,7 @@ export const VideosPage: React.FC = () => {
       categoryKey: 'Digital Marketing',
       description: 'High-converting ad creatives, viral reels, and social media brand campaign videos.',
       icon: <Sparkles className="w-6 h-6 text-[#D4AF37]" />,
-      coverImage: '/Posters/Overall General Promotion/WhatsApp Image 2026-08-17 at 13.17.39.jpeg',
+      coverImage: '/Posters/Digital Marketting/WhatsApp Image 2026-09-02 at 21.45.09.jpeg',
     },
     {
       id: 'folder-car-bonanza',
