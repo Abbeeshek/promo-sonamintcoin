@@ -8,7 +8,12 @@ export type Category =
   | 'PRPC'
   | 'NWG'
   | 'Login Guide'
-  | 'Exchanges';
+  | 'Exchanges'
+  | 'Stockpoint'
+  | 'Digital Marketing'
+  | 'Car Bonanza'
+  | 'Booster Plan'
+  | 'Be A Partner';
 
 export type SortOption = 'az' | 'za' | 'type';
 

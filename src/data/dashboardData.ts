@@ -106,5 +106,10 @@ export const getAvailableCategories = (): Category[] => {
     'NWG',
     'Login Guide',
     'Exchanges',
+    'Stockpoint',
+    'Digital Marketing',
+    'Car Bonanza',
+    'Booster Plan',
+    'Be A Partner',
   ];
 };

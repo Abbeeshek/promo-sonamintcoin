@@ -23,8 +23,48 @@ export const VideosPage: React.FC = () => {
 
   const allVideos = OFFICIAL_ASSETS.filter((a) => a.type === 'videos');
 
-  // 4 Promotional Video Collections matching workspace file system structure
+  // Promotional Video Collections matching workspace file system structure
   const collections: VideoFolder[] = [
+    {
+      id: 'folder-stockpoint',
+      name: 'Stockpoint Outlet & Center',
+      categoryKey: 'Stockpoint',
+      description: 'Regional distribution hubs, stockpoint partner setup, and outlet operation videos.',
+      icon: <Layers className="w-6 h-6 text-[#F3D068]" />,
+      coverImage: '/Posters/Sonamintcoin Plan/WhatsApp Image 2026-08-17 at 13.17.58.jpeg',
+    },
+    {
+      id: 'folder-digital-marketing',
+      name: 'Digital Marketing & Social Campaigns',
+      categoryKey: 'Digital Marketing',
+      description: 'High-converting ad creatives, viral reels, and social media brand campaign videos.',
+      icon: <Sparkles className="w-6 h-6 text-[#D4AF37]" />,
+      coverImage: '/Posters/Overall General Promotion/WhatsApp Image 2026-08-17 at 13.17.39.jpeg',
+    },
+    {
+      id: 'folder-car-bonanza',
+      name: 'Car Bonanza Mega Rewards',
+      categoryKey: 'Car Bonanza',
+      description: 'Luxury vehicle reward announcements, qualifier celebrations, and contest videos.',
+      icon: <ShieldCheck className="w-6 h-6 text-[#F3D068]" />,
+      coverImage: '/Posters/Double Damaka/WhatsApp Image 2026-08-17 at 13.17.49.jpeg',
+    },
+    {
+      id: 'folder-booster-plan',
+      name: 'Booster Plan High Return',
+      categoryKey: 'Booster Plan',
+      description: 'Accelerated returns, staking multipliers, and bonus payout walkthrough videos.',
+      icon: <Video className="w-6 h-6 text-[#D4AF37]" />,
+      coverImage: '/Posters/Sonamintcoin Plan/WhatsApp Image 2026-08-17 at 13.18.00.jpeg',
+    },
+    {
+      id: 'folder-be-a-partner',
+      name: 'Be A Partner Franchise Program',
+      categoryKey: 'Be A Partner',
+      description: 'Entrepreneurship partner invitations, franchise benefits, and business model guides.',
+      icon: <ShieldCheck className="w-6 h-6 text-[#F3D068]" />,
+      coverImage: '/Posters/Profit Sharing - Club Membership/English/WhatsApp Image 2026-08-17 at 13.17.47.jpeg',
+    },
     {
       id: 'folder-overall',
       name: 'Overall General Promotion',

@@ -23,8 +23,24 @@ export const PostersPage: React.FC = () => {
 
   const allPosters = OFFICIAL_ASSETS.filter((a) => a.type === 'posters');
 
-  // 6 Promotional Poster Collections matching workspace file system structure
+  // Promotional Poster Collections matching workspace file system structure
   const collections: PosterFolder[] = [
+    {
+      id: 'folder-digital-marketing-posters',
+      name: 'Digital Marketing & Social Banners',
+      categoryKey: 'Digital Marketing',
+      description: 'High-impact social media campaign graphics, digital ad banners, and promo templates.',
+      icon: <Sparkles className="w-6 h-6 text-[#F3D068]" />,
+      coverImage: '/Posters/Overall General Promotion/WhatsApp Image 2026-08-17 at 13.17.39.jpeg',
+    },
+    {
+      id: 'folder-stockpoint-posters',
+      name: 'Stockpoint Promotional Posters',
+      categoryKey: 'Stockpoint',
+      description: 'Regional stockpoint center banners, outlet partner graphics, and hub signage.',
+      icon: <Building className="w-6 h-6 text-[#D4AF37]" />,
+      coverImage: '/Posters/Sonamintcoin Plan/WhatsApp Image 2026-08-17 at 13.17.58.jpeg',
+    },
     {
       id: 'folder-plan',
       name: 'Sonamintcoin Plan Posters',
@@ -42,7 +58,7 @@ export const PostersPage: React.FC = () => {
       coverImage: '/Posters/Profit Sharing - Club Membership/English/WhatsApp Image 2026-08-17 at 13.17.34.jpeg',
     },
     {
-      id: 'folder-[#14161D]',
+      id: 'folder-double-dhamaka',
       name: 'Double Dhamaka Campaign',
       categoryKey: 'Double Damaka',
       description: 'Double rewards promotion banners, bonus graphics, and campaign posters.',
