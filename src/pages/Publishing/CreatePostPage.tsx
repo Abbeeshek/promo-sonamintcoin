@@ -15,7 +15,18 @@ import { CaptionComposer } from '../../components/publishing/CaptionComposer';
 import { PlatformSelector } from '../../components/publishing/PlatformSelector';
 import { PostPreviewCard } from '../../components/publishing/PostPreviewCard';
 import { PublishConfirmModal } from '../../components/publishing/PublishConfirmModal';
-import { Send, Calendar, Globe, AlertCircle } from 'lucide-react';
+import {
+  Send,
+  Calendar,
+  Globe,
+  AlertCircle,
+  Sparkles,
+  UploadCloud,
+  Plus,
+  Check,
+  ArrowRight,
+  RotateCcw,
+} from 'lucide-react';
 
 export const CreatePostPage: React.FC = () => {
   const navigate = useNavigate();
@@ -25,11 +36,10 @@ export const CreatePostPage: React.FC = () => {
   // Approved Content Data
   const officialApproved = OFFICIAL_ASSETS;
   const userApproved = getStoredUploads().filter((u) => u.verificationStatus === 'approved');
-  const allEligibleAssets: (ContentAsset | UserUpload)[] = [...officialApproved, ...userApproved];
 
-  const [selectedAsset, setSelectedAsset] = useState<ContentAsset | UserUpload | null>(
-    allEligibleAssets[0] || null
-  );
+  // Media Source Selection state: null = initial dual choice view, 'platform' = platform catalog, 'user' = own uploads
+  const [sourceType, setSourceType] = useState<'platform' | 'user' | null>(null);
+  const [selectedAsset, setSelectedAsset] = useState<ContentAsset | UserUpload | null>(null);
 
   const [caption, setCaption] = useState('');
   const [hashtags, setHashtags] = useState<string[]>([]);
@@ -47,10 +57,21 @@ export const CreatePostPage: React.FC = () => {
 
   const [isConfirmModalOpen, setIsConfirmModalOpen] = useState(false);
 
+  // Auto-detect preselected asset from query params (e.g. returning from My Uploads page after verification)
   useEffect(() => {
     if (preselectedAssetId) {
-      const match = allEligibleAssets.find((a) => a.id === preselectedAssetId);
-      if (match) setSelectedAsset(match);
+      const userMatch = userApproved.find((a) => a.id === preselectedAssetId);
+      if (userMatch) {
+        setSourceType('user');
+        setSelectedAsset(userMatch);
+        return;
+      }
+      const officialMatch = officialApproved.find((a) => a.id === preselectedAssetId);
+      if (officialMatch) {
+        setSourceType('platform');
+        setSelectedAsset(officialMatch);
+        return;
+      }
     }
   }, [preselectedAssetId]);
 
@@ -141,41 +162,265 @@ export const CreatePostPage: React.FC = () => {
         <div className="lg:col-span-7 space-y-6">
           {/* 1. Asset Selector */}
           <Card className="p-5 border border-white/10">
-            <h3 className="text-xs font-bold font-display text-[#F9FAFB] uppercase tracking-wider mb-3">
+            <h3 className="text-xs font-bold font-display text-[#F9FAFB] uppercase tracking-wider mb-4">
               1. Select Approved Media Asset
             </h3>
 
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-56 overflow-y-auto pr-1">
-              {allEligibleAssets.map((asset) => {
-                const isSelected = selectedAsset?.id === asset.id;
-                const isUserUpload = 'verificationStatus' in asset;
+            {sourceType === null ? (
+              /* Dual Choice Options: Platform Content vs Upload Own Content */
+              <div className="space-y-3">
+                <p className="text-xs text-[#9CA3AF]">
+                  Choose where you would like to select your promotional media asset from:
+                </p>
 
-                return (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {/* Option 1: Official Platform Media */}
                   <button
-                    key={asset.id}
                     type="button"
-                    onClick={() => setSelectedAsset(asset)}
-                    className={`relative p-2 rounded-xl border text-left flex flex-col justify-between transition-all ${
-                      isSelected
-                        ? 'bg-[#181A22] border-[#D4AF37] shadow-gold-glow'
-                        : 'bg-[#181A22]/50 border-white/10 hover:border-white/20'
-                    }`}
+                    onClick={() => {
+                      setSourceType('platform');
+                      if (officialApproved.length > 0) {
+                        setSelectedAsset(officialApproved[0]);
+                      }
+                    }}
+                    className="group relative p-5 rounded-2xl bg-[#181A22]/80 border border-white/10 hover:border-[#D4AF37] hover:shadow-gold-glow transition-all text-left flex flex-col justify-between"
                   >
-                    <div className="aspect-video rounded-lg bg-black overflow-hidden mb-2 relative">
-                      {asset.thumbnailPath || asset.path ? (
-                        <img src={asset.thumbnailPath || asset.path} alt={asset.title} className="w-full h-full object-cover" />
-                      ) : null}
-                      {isUserUpload && (
-                        <span className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-blue-500/80 text-[8px] font-bold text-white uppercase">
-                          My Upload
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="w-10 h-10 rounded-xl bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#F3D068] group-hover:scale-105 transition-transform">
+                          <Sparkles className="w-5 h-5" />
+                        </div>
+                        <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-[#F3D068]">
+                          {officialApproved.length} Assets
                         </span>
-                      )}
+                      </div>
+
+                      <h4 className="text-sm font-bold font-display text-[#F9FAFB] group-hover:text-[#F3D068] transition-colors mb-1">
+                        Select Content from Platform
+                      </h4>
+                      <p className="text-xs text-[#9CA3AF] leading-relaxed">
+                        Browse Sona Mint Coin official marketing posters, videos, and presentations.
+                      </p>
                     </div>
-                    <span className="text-xs font-bold text-[#F9FAFB] line-clamp-1">{asset.title}</span>
+
+                    <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-semibold text-[#D4AF37]">
+                      <span>Browse Platform Media</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
                   </button>
-                );
-              })}
-            </div>
+
+                  {/* Option 2: Upload Own Content */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSourceType('user');
+                      if (userApproved.length > 0) {
+                        setSelectedAsset(userApproved[0]);
+                      }
+                    }}
+                    className="group relative p-5 rounded-2xl bg-[#181A22]/80 border border-white/10 hover:border-[#D4AF37] hover:shadow-gold-glow transition-all text-left flex flex-col justify-between"
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/30 flex items-center justify-center text-blue-400 group-hover:scale-105 transition-transform">
+                          <UploadCloud className="w-5 h-5" />
+                        </div>
+                        <span className="px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[10px] font-bold text-blue-400">
+                          {userApproved.length} Verified
+                        </span>
+                      </div>
+
+                      <h4 className="text-sm font-bold font-display text-[#F9FAFB] group-hover:text-[#F3D068] transition-colors mb-1">
+                        Upload Own Content
+                      </h4>
+                      <p className="text-xs text-[#9CA3AF] leading-relaxed">
+                        Use your personal uploaded videos & graphics after passing AI guideline verification.
+                      </p>
+                    </div>
+
+                    <div className="mt-4 pt-3 border-t border-white/[0.06] flex items-center justify-between text-xs font-semibold text-[#D4AF37]">
+                      <span>Browse My Uploads</span>
+                      <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                    </div>
+                  </button>
+                </div>
+              </div>
+            ) : (
+              /* Active Source View with Header Switcher and Asset Grid */
+              <div className="space-y-4">
+                {/* Source Switcher Header */}
+                <div className="flex flex-wrap items-center justify-between gap-2 pb-3 border-b border-white/[0.06]">
+                  <div className="flex items-center gap-1.5 bg-[#14161D] p-1 rounded-xl border border-white/10">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSourceType('platform');
+                        if (!selectedAsset || 'verificationStatus' in selectedAsset) {
+                          setSelectedAsset(officialApproved[0] || null);
+                        }
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                        sourceType === 'platform'
+                          ? 'bg-[#181A22] text-[#F3D068] border border-[#D4AF37]/30 shadow-sm'
+                          : 'text-[#9CA3AF] hover:text-[#F9FAFB] hover:bg-white/5'
+                      }`}
+                    >
+                      <Sparkles className="w-3.5 h-3.5" />
+                      Platform Media ({officialApproved.length})
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSourceType('user');
+                        if (!selectedAsset || !('verificationStatus' in selectedAsset)) {
+                          setSelectedAsset(userApproved[0] || null);
+                        }
+                      }}
+                      className={`px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                        sourceType === 'user'
+                          ? 'bg-[#181A22] text-[#F3D068] border border-[#D4AF37]/30 shadow-sm'
+                          : 'text-[#9CA3AF] hover:text-[#F9FAFB] hover:bg-white/5'
+                      }`}
+                    >
+                      <UploadCloud className="w-3.5 h-3.5" />
+                      My Uploads ({userApproved.length})
+                    </button>
+                  </div>
+
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSourceType(null);
+                        setSelectedAsset(null);
+                      }}
+                      className="text-[11px] text-[#9CA3AF] hover:text-[#F9FAFB] flex items-center gap-1 px-2 py-1 rounded hover:bg-white/5"
+                    >
+                      <RotateCcw className="w-3 h-3" /> Change Option
+                    </button>
+
+                    {sourceType === 'user' && (
+                      <Button
+                        variant="primary"
+                        size="sm"
+                        onClick={() => navigate('/app/my-uploads')}
+                        icon={<Plus className="w-3.5 h-3.5" />}
+                      >
+                        Upload New Content
+                      </Button>
+                    )}
+                  </div>
+                </div>
+
+                {/* Platform Media Grid */}
+                {sourceType === 'platform' && (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-56 overflow-y-auto pr-1">
+                    {officialApproved.map((asset) => {
+                      const isSelected = selectedAsset?.id === asset.id;
+                      return (
+                        <button
+                          key={asset.id}
+                          type="button"
+                          onClick={() => setSelectedAsset(asset)}
+                          className={`relative p-2 rounded-xl border text-left flex flex-col justify-between transition-all ${
+                            isSelected
+                              ? 'bg-[#181A22] border-[#D4AF37] shadow-gold-glow'
+                              : 'bg-[#181A22]/50 border-white/10 hover:border-white/20'
+                          }`}
+                        >
+                          <div className="aspect-video rounded-lg bg-black overflow-hidden mb-2 relative">
+                            {asset.thumbnailPath || asset.path ? (
+                              <img src={asset.thumbnailPath || asset.path} alt={asset.title} className="w-full h-full object-cover" />
+                            ) : null}
+                            {isSelected && (
+                              <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-[#D4AF37] text-black flex items-center justify-center">
+                                <Check className="w-3 h-3 stroke-[3]" />
+                              </span>
+                            )}
+                          </div>
+                          <span className="text-xs font-bold text-[#F9FAFB] line-clamp-1">{asset.title}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+
+                {/* User Uploads Grid */}
+                {sourceType === 'user' && (
+                  <div>
+                    {userApproved.length === 0 ? (
+                      <div className="p-6 rounded-xl bg-[#181A22]/60 border border-dashed border-white/10 text-center space-y-3">
+                        <UploadCloud className="w-8 h-8 text-[#D4AF37] mx-auto opacity-80" />
+                        <div>
+                          <h5 className="text-xs font-bold text-[#F9FAFB] mb-1">No Approved Custom Uploads</h5>
+                          <p className="text-[11px] text-[#9CA3AF] max-w-xs mx-auto">
+                            Upload your video or poster and run AI guideline verification. Once approved, it will automatically appear here!
+                          </p>
+                        </div>
+                        <Button
+                          variant="primary"
+                          size="sm"
+                          onClick={() => navigate('/app/my-uploads')}
+                          icon={<Plus className="w-3.5 h-3.5" />}
+                        >
+                          Redirect to Upload Content Page
+                        </Button>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-56 overflow-y-auto pr-1">
+                        {userApproved.map((asset) => {
+                          const isSelected = selectedAsset?.id === asset.id;
+                          return (
+                            <button
+                              key={asset.id}
+                              type="button"
+                              onClick={() => setSelectedAsset(asset)}
+                              className={`relative p-2 rounded-xl border text-left flex flex-col justify-between transition-all ${
+                                isSelected
+                                  ? 'bg-[#181A22] border-[#D4AF37] shadow-gold-glow'
+                                  : 'bg-[#181A22]/50 border-white/10 hover:border-white/20'
+                              }`}
+                            >
+                              <div className="aspect-video rounded-lg bg-black overflow-hidden mb-2 relative">
+                                {asset.thumbnailPath || asset.path ? (
+                                  asset.contentType === 'videos' ? (
+                                    <video src={asset.path} className="w-full h-full object-cover" />
+                                  ) : (
+                                    <img src={asset.path} alt={asset.title} className="w-full h-full object-cover" />
+                                  )
+                                ) : null}
+                                <span className="absolute top-1 left-1 px-1.5 py-0.5 rounded bg-blue-500/80 text-[8px] font-bold text-white uppercase">
+                                  My Upload
+                                </span>
+                                {isSelected && (
+                                  <span className="absolute top-1 right-1 w-5 h-5 rounded-full bg-[#D4AF37] text-black flex items-center justify-center">
+                                    <Check className="w-3 h-3 stroke-[3]" />
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-xs font-bold text-[#F9FAFB] line-clamp-1">{asset.title}</span>
+                            </button>
+                          );
+                        })}
+
+                        {/* Additional "+ Upload New" card tile in user grid */}
+                        <button
+                          type="button"
+                          onClick={() => navigate('/app/my-uploads')}
+                          className="p-3 rounded-xl border border-dashed border-white/15 bg-white/[0.02] hover:bg-white/[0.05] hover:border-[#D4AF37]/50 transition-all flex flex-col items-center justify-center text-center gap-2 group min-h-[100px]"
+                        >
+                          <div className="w-8 h-8 rounded-full bg-[#D4AF37]/10 border border-[#D4AF37]/30 flex items-center justify-center text-[#F3D068] group-hover:scale-110 transition-transform">
+                            <Plus className="w-4 h-4" />
+                          </div>
+                          <span className="text-xs font-bold text-[#D4AF37]">Upload New Media</span>
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            )}
           </Card>
 
           {/* 2. Caption Composer */}
